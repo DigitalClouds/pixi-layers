@@ -26,7 +26,8 @@
     "check:browserify": "yarn checkpack -- browserify -e test/checkpack.ts",
     "check:webpack": "yarn checkpack -- webpack -e test/checkpack.ts",
     "check:vanillajs": "yarn checkpack -- vanillajs -e test/checkpack.ts",
-    "check:all": "yarn build && yarn check:browserify && yarn check:webpack && yarn check:vanillajs"
+    "check:all": "yarn build && yarn check:browserify && yarn check:webpack && yarn check:vanillajs",
+    "prepare": "npm run build"
   },
   "files": [
     "dist/",
