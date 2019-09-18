@@ -22,12 +22,11 @@ tmp.file(function (err, filename) {
   fs.writeFileSync(filename, filesCompilation);
   process.exec('tsc --module none --target es5 --declaration --removeComments node_modules/pixi.js/pixi.js.d.ts ' + filename, function(err, stdout, stderr) {
     var dtsPath = filename.replace('.ts', '.d.ts');
-    var dtsContent = '' + fs.readFileSync(dtsPath);
+    var dtsContent = '/// <reference path="pixi.js">\r\n' + fs.readFileSync(dtsPath);
 
     fs.writeFileSync(
       path.resolve('dist/pixi-layers.d.ts'),
-      dtsContent.replace(/namespace pixi_display/g, 'namespace PIXI.display')
-		  .replace(/pixi_display/g, 'PIXI.display')
+      dtsContent.replace(/^(?:ex|im)port .*(?: from)?["']\.{1,2}\/.+["'];$/gm, '')
     );
   });
 }, {postfix: '.ts'});

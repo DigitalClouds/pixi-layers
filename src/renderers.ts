@@ -1,64 +1,34 @@
-declare namespace PIXI {
+import {Stage} from './Stage';
+import {DisplayObject, Transform, Renderer, RenderTexture} from 'pixi.js';
+import Matrix = PIXI.Matrix;
+import {Layer} from './Layer';
+declare module "pixi.js" {
     interface Renderer {
-        _activeLayer?: pixi_display.Layer
-        _renderSessionId?: number
-        _lastDisplayOrder?: number
-        CONTEXT_UID?: number
-        incDisplayOrder?(): number
-    }
-    interface CanvasRenderer {
-        _activeLayer?: pixi_display.Layer
-        _renderSessionId?: number
-        _lastDisplayOrder?: number
-        incDisplayOrder?(): number
+        _lastDisplayOrder: number;
+        _activeLayer: Layer;
+        incDisplayOrder: () => number;
+        _oldRender: (displayObject: DisplayObject, renderTexture?: RenderTexture, clear?: boolean, transform?: Matrix, skipUpdateTransform?: boolean) => void;
+        CONTEXT_UID: number;
     }
 }
 
-namespace pixi_display {
-    (Object as any).assign(PIXI.Renderer.prototype, {
-        _lastDisplayOrder: 0,
-        _activeLayer: null,
+Renderer.prototype._lastDisplayOrder = 0;
+Renderer.prototype._activeLayer = null;
+Renderer.prototype.incDisplayOrder = function () {
+    return ++this._lastDisplayOrder;
+};
+Renderer.prototype.CONTEXT_UID = 0;
+Renderer.prototype._oldRender = Renderer.prototype.render;
 
-        incDisplayOrder() {
-            return ++this._lastDisplayOrder;
-        },
-
-        _oldRender: PIXI.Renderer.prototype.render,
-
-        render(displayObject: PIXI.DisplayObject, renderTexture?: PIXI.RenderTexture, clear?: boolean, transform?: PIXI.Transform, skipUpdateTransform?: boolean) {
-            if (!renderTexture) {
-                this._lastDisplayOrder = 0;
-            }
-            this._activeLayer = null;
-            if ((displayObject as Stage).isStage) {
-                (displayObject as Stage).updateStage()
-            }
-            this._oldRender(displayObject, renderTexture, clear, transform, skipUpdateTransform);
-        }
-    });
-
-    let canvasRenderer = (PIXI as any).CanvasRenderer;
-    if (canvasRenderer) {
-        (Object as any).assign(canvasRenderer.prototype, {
-            _lastDisplayOrder: 0,
-            _activeLayer: null,
-
-            incDisplayOrder() {
-                return ++this._lastDisplayOrder;
-            },
-
-            _oldRender: canvasRenderer.prototype.render,
-
-            render(displayObject: PIXI.DisplayObject, renderTexture?: PIXI.RenderTexture, clear?: boolean, transform?: PIXI.Transform, skipUpdateTransform?: boolean) {
-                if (!renderTexture) {
-                    this._lastDisplayOrder = 0;
-                }
-                this._activeLayer = null;
-                if ((displayObject as Stage).isStage) {
-                    (displayObject as Stage).updateStage()
-                }
-                this._oldRender(displayObject, renderTexture, clear, transform, skipUpdateTransform);
-            }
-        });
+Renderer.prototype.render = function (displayObject: DisplayObject, renderTexture?: RenderTexture, clear?: boolean, transform?: Matrix, skipUpdateTransform?: boolean) {
+    if (!renderTexture) {
+        this._lastDisplayOrder = 0;
     }
+    this._activeLayer = null;
+    if ((displayObject as Stage).isStage) {
+        (displayObject as Stage).updateStage()
+    }
+    this._oldRender(displayObject, renderTexture, clear, transform, skipUpdateTransform);
 }
+
+

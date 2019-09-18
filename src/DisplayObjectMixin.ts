@@ -1,7 +1,10 @@
-declare namespace PIXI {
-    export interface DisplayObject {
-        parentGroup: pixi_display.Group,
+import {Group} from './Group';
+import {Layer} from './Layer';
+import {Point, DisplayObject, ParticleContainer} from 'pixi.js';
 
+declare module "pixi.js" {
+    interface DisplayObject {
+        parentGroup: Group,
         /**
          * Object will be rendered
          *
@@ -10,57 +13,42 @@ declare namespace PIXI {
          * its always null for layers
          *
          */
-        parentLayer?: pixi_display.Layer,
-
-
-        _activeParentLayer?: pixi_display.Layer,
+        parentLayer?: Layer,
+        _activeParentLayer?: Layer,
         /**
          * zOrder is used to sort element inside the layer
          * It can be used with zIndex together: First PixiJS v5 sorts elements by zIndex inside a container,
          * then pixi-layers plugin sorts by zOrder inside a layer.
          */
         zOrder?: number,
-
         /**
          * updateOrder is calculated by DisplayList, it is required for sorting inside DisplayGroup
          */
         updateOrder?: number,
-
         /**
          * displayOrder is calculated by render, it is required for interaction
          */
         displayOrder?: number,
-
         /**
          * Stage will look inside for elements that can be re-arranged, if this flag is true
          * Make it false for ParticleContainer
          */
         layerableChildren?: boolean
-
-	    /**
-	     * is Layer
-	     */
-	    isLayer?: boolean;
-
-	    containsPoint?(p: PIXI.IPoint): boolean;
+        /**
+         * is Layer
+         */
+        isLayer?: boolean;
+        containsPoint?(p: Point): boolean;
     }
 }
 
-(Object as any).assign(PIXI.DisplayObject.prototype, {
-    parentLayer: null,
-    _activeParentLayer: null,
-    parentGroup: null,
-    zOrder: 0,
-    zIndex: 0,
-    updateOrder: 0,
-    displayOrder: 0,
-    layerableChildren: true,
-	isLayer: false
-});
-
-if (PIXI.ParticleContainer) {
-    PIXI.ParticleContainer.prototype.layerableChildren = false;
-}
-else if ((PIXI as any).ParticleContainer) {
-    (PIXI as any).ParticleContainer.prototype.layerableChildren = false;
-}
+DisplayObject.prototype.parentLayer = null;
+DisplayObject.prototype._activeParentLayer = null;
+DisplayObject.prototype.parentGroup = null;
+DisplayObject.prototype.zOrder = 0;
+DisplayObject.prototype.zIndex = 0;
+DisplayObject.prototype.updateOrder = 0;
+DisplayObject.prototype.displayOrder = 0;
+DisplayObject.prototype.layerableChildren = true;
+DisplayObject.prototype.isLayer = false;
+ParticleContainer.prototype.layerableChildren = false;
