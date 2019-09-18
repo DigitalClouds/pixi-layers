@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const pixi_js_1 = require("pixi.js");
+pixi_js_1.DisplayObject.prototype.parentLayer = null;
+pixi_js_1.DisplayObject.prototype._activeParentLayer = null;
+pixi_js_1.DisplayObject.prototype.parentGroup = null;
+pixi_js_1.DisplayObject.prototype.zOrder = 0;
+pixi_js_1.DisplayObject.prototype.zIndex = 0;
+pixi_js_1.DisplayObject.prototype.updateOrder = 0;
+pixi_js_1.DisplayObject.prototype.displayOrder = 0;
+pixi_js_1.DisplayObject.prototype.layerableChildren = true;
+pixi_js_1.DisplayObject.prototype.isLayer = false;
+pixi_js_1.ParticleContainer.prototype.layerableChildren = false;
