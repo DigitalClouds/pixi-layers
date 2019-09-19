@@ -1,21 +1,18 @@
 //TODO: add maxDisplayOrder for displayObjects and use it to speed up the interaction here
 import {DisplayObject, Point, Graphics, Container} from 'pixi.js';
-import InteractionManager = PIXI.interaction.InteractionManager;
-import InteractionEvent = PIXI.interaction.InteractionEvent;
+import {InteractionEvent, InteractionManager} from '@pixi/interaction';
 
-declare module 'pixi.js' {
-    namespace interaction {
-        interface InteractionManager {
-            _queue: [Array<DisplayObject>, Array<DisplayObject>];
-            _displayProcessInteractive: (point: Point, displayObject: DisplayObject, hitTestOrder: number, interactive: boolean, outOfMask: boolean) => number;
-            _startInteractionProcess: () => void;
-            _queueAdd: (displayObject: DisplayObject, order: number) => void;
-            _finishInteractionProcess: (event: InteractionEvent, func: Function) => void;
-        }
+declare module '@pixi/interaction' {
+    interface InteractionManager {
+        _queue: [Array<DisplayObject>, Array<DisplayObject>];
+        _displayProcessInteractive: (point: Point, displayObject: DisplayObject, hitTestOrder: number, interactive: boolean, outOfMask: boolean) => number;
+        _startInteractionProcess: () => void;
+        _queueAdd: (displayObject: DisplayObject, order: number) => void;
+        _finishInteractionProcess: (event: InteractionEvent, func: Function) => void;
     }
 }
 
-InteractionManager.prototype._queue= [[], []];
+InteractionManager.prototype._queue = [[], []];
 /**
  * This is private recursive copy of processInteractive
  */
