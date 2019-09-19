@@ -30,3 +30,4 @@ tmp.file(function (err, filename) {
     );
   });
 }, {postfix: '.ts'});
+
