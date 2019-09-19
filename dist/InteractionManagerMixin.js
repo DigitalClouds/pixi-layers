@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var InteractionManager = PIXI.interaction.InteractionManager;
-InteractionManager.prototype._queue = [[], []];
+const interaction_1 = require("@pixi/interaction");
+interaction_1.InteractionManager.prototype._queue = [[], []];
 /**
  * This is private recursive copy of processInteractive
  */
-InteractionManager.prototype._displayProcessInteractive = function (point, displayObject, hitTestOrder, interactive, outOfMask) {
+interaction_1.InteractionManager.prototype._displayProcessInteractive = function (point, displayObject, hitTestOrder, interactive, outOfMask) {
     if (!displayObject || !displayObject.visible) {
         return 0;
     }
@@ -92,7 +92,7 @@ InteractionManager.prototype._displayProcessInteractive = function (point, displ
     return hit;
 };
 // this is protected, so use index accessor to force typescript to be ok with this
-InteractionManager.prototype['processInteractive'] = function (strangeStuff, displayObject, func, hitTest, interactive) {
+interaction_1.InteractionManager.prototype['processInteractive'] = function (strangeStuff, displayObject, func, hitTest, interactive) {
     //older versions
     let interactionEvent = null;
     let point = null;
@@ -110,7 +110,7 @@ InteractionManager.prototype['processInteractive'] = function (strangeStuff, dis
     // Need to return a boolean, was previously void.
     return !!hit;
 };
-InteractionManager.prototype._startInteractionProcess = function () {
+interaction_1.InteractionManager.prototype._startInteractionProcess = function () {
     //move it to constructor
     this._eventDisplayOrder = 1;
     if (!this._queue) {
@@ -120,7 +120,7 @@ InteractionManager.prototype._startInteractionProcess = function () {
     this._queue[0].length = 0;
     this._queue[1].length = 0;
 };
-InteractionManager.prototype._queueAdd = function (displayObject, order) {
+interaction_1.InteractionManager.prototype._queueAdd = function (displayObject, order) {
     let queue = this._queue;
     if (order < this._eventDisplayOrder) {
         queue[0].push(displayObject);
@@ -137,7 +137,7 @@ InteractionManager.prototype._queueAdd = function (displayObject, order) {
         queue[1].push(displayObject);
     }
 };
-InteractionManager.prototype._finishInteractionProcess = function (event, func) {
+interaction_1.InteractionManager.prototype._finishInteractionProcess = function (event, func) {
     let queue = this._queue;
     let q = queue[0];
     for (let i = 0, l = q.length; i < l; i++) {

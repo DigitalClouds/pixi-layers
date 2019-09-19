@@ -8,7 +8,7 @@ declare module "pixi.js" {
 }
 
 
-import { DisplayObject } from 'pixi.js';
+import { Point, DisplayObject } from 'pixi.js';
 declare module "pixi.js" {
     interface DisplayObject {
         parentGroup: Group;
@@ -54,15 +54,13 @@ export declare class Group extends utils.EventEmitter {
     static _lastLayerConflict: number;
     static conflict(): void;
 }
-declare module 'pixi.js' {
-    namespace interaction {
-        interface InteractionManager {
-            _queue: [Array<DisplayObject>, Array<DisplayObject>];
-            _displayProcessInteractive: (point: Point, displayObject: DisplayObject, hitTestOrder: number, interactive: boolean, outOfMask: boolean) => number;
-            _startInteractionProcess: () => void;
-            _queueAdd: (displayObject: DisplayObject, order: number) => void;
-            _finishInteractionProcess: (event: InteractionEvent, func: Function) => void;
-        }
+declare module '@pixi/interaction' {
+    interface InteractionManager {
+        _queue: [Array<DisplayObject>, Array<DisplayObject>];
+        _displayProcessInteractive: (point: Point, displayObject: DisplayObject, hitTestOrder: number, interactive: boolean, outOfMask: boolean) => number;
+        _startInteractionProcess: () => void;
+        _queueAdd: (displayObject: DisplayObject, order: number) => void;
+        _finishInteractionProcess: (event: InteractionEvent, func: Function) => void;
     }
 }
 import { RenderTexture, Rectangle } from 'pixi.js';
@@ -106,6 +104,52 @@ export declare class Layer extends Container {
     _postRender(renderer: Renderer): void;
     render(renderer: Renderer): void;
     destroy(options?: any): void;
+}
+declare module "@pixi/interaction" {
+    type InteractionPointerEvents = "pointerdown" | "pointercancel" | "pointerup" | "pointertap" | "pointerupoutside" | "pointermove" | "pointerover" | "pointerout";
+    type InteractionTouchEvents = "touchstart" | "touchcancel" | "touchend" | "touchendoutside" | "touchmove" | "tap";
+    type InteractionMouseEvents = "rightdown" | "mousedown" | "rightup" | "mouseup" | "rightclick" | "click" | "rightupoutside" | "mouseupoutside" | "mousemove" | "mouseover" | "mouseout";
+    type InteractionPixiEvents = "added" | "removed";
+    type InteractionEventTypes = InteractionPointerEvents | InteractionTouchEvents | InteractionMouseEvents | InteractionPixiEvents;
+    class InteractionEvent {
+        constructor();
+        stopped: boolean;
+        target: PIXI.DisplayObject;
+        currentTarget: PIXI.DisplayObject;
+        type: string;
+        data: PIXI.interaction.InteractionData;
+        stopPropagation(): void;
+        reset(): void;
+    }
+    class InteractionManager extends PIXI.utils.EventEmitter {
+        constructor(renderer: PIXI.Renderer, options?: {
+            autoPreventDefault?: boolean;
+            interactionFrequency?: number;
+        });
+        renderer: PIXI.AbstractRenderer;
+        autoPreventDefault: boolean;
+        interactionFrequency: number;
+        mouse: PIXI.interaction.InteractionData;
+        eventData: any;
+        protected interactionDOMElement: HTMLElement;
+        moveWhenInside: boolean;
+        protected eventsAdded: boolean;
+        protected mouseOverRenderer: boolean;
+        readonly supportsTouchEvents: boolean;
+        readonly supportsPointerEvents: boolean;
+        cursorStyles: {
+            [key: string]: any;
+        };
+        currentCursorMode: string;
+        resolution: number;
+        hitTest(globalPoint: PIXI.Point, root?: PIXI.Container): PIXI.DisplayObject;
+        setTargetElement(element: HTMLElement, resolution?: number): void;
+        update(deltaTime: number): void;
+        setCursorMode(mode: string): void;
+        mapPositionToPoint(point: PIXI.Point, x: number, y: number): void;
+        protected processInteractive(interactionEvent: PIXI.interaction.InteractionEvent, displayObject: PIXI.Container | PIXI.Sprite | PIXI.TilingSprite, func?: (...params: any[]) => any, hitTest?: boolean, interactive?: boolean, skipDelayed?: boolean): boolean;
+        destroy(): void;
+    }
 }
 
 
