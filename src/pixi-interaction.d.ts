@@ -1,16 +1,17 @@
 declare module "@pixi/interaction" {
-    type InteractionPointerEvents = "pointerdown" | "pointercancel" | "pointerup" | "pointertap" | "pointerupoutside" | "pointermove" | "pointerover" | "pointerout";
-    type InteractionTouchEvents = "touchstart" | "touchcancel" | "touchend" | "touchendoutside" | "touchmove" | "tap";
-    type InteractionMouseEvents = "rightdown" | "mousedown" | "rightup" | "mouseup" | "rightclick" | "click" | "rightupoutside" | "mouseupoutside" | "mousemove" | "mouseover" | "mouseout";
-    type InteractionPixiEvents = "added" | "removed";
-    type InteractionEventTypes = InteractionPointerEvents | InteractionTouchEvents | InteractionMouseEvents | InteractionPixiEvents;
+    import * as PIXI from 'pixi.js';
+    export type InteractionPointerEvents = "pointerdown" | "pointercancel" | "pointerup" | "pointertap" | "pointerupoutside" | "pointermove" | "pointerover" | "pointerout";
+    export type InteractionTouchEvents = "touchstart" | "touchcancel" | "touchend" | "touchendoutside" | "touchmove" | "tap";
+    export type InteractionMouseEvents = "rightdown" | "mousedown" | "rightup" | "mouseup" | "rightclick" | "click" | "rightupoutside" | "mouseupoutside" | "mousemove" | "mouseover" | "mouseout";
+    export type InteractionPixiEvents = "added" | "removed";
+    export type InteractionEventTypes = InteractionPointerEvents | InteractionTouchEvents | InteractionMouseEvents | InteractionPixiEvents;
     /**
      * Event class that mimics native DOM events.
      *
      * @class
      * @memberof PIXI.interaction
      */
-    class InteractionEvent {
+    export class InteractionEvent {
         constructor();
         /**
          * Whether this event will continue propagating in the tree.
@@ -69,7 +70,7 @@ declare module "@pixi/interaction" {
      * @extends PIXI.utils.EventEmitter
      * @memberof PIXI.interaction
      */
-    class InteractionManager extends PIXI.utils.EventEmitter {
+    export class InteractionManager extends PIXI.utils.EventEmitter {
         constructor(renderer: PIXI.Renderer, options?: {
             autoPreventDefault?: boolean;
             interactionFrequency?: number;
